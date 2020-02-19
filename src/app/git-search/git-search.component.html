@@ -1,0 +1,37 @@
+<h3>{{title}} - {{displayQuery}} - page {{page}}</h3>
+
+<div>
+  <label for="GitSearch__input">Repository: </label>
+  <input id="GitSearch__input" name="query" placeholder="Enter Search Here" [(ngModel)]="searchQuery"/>
+  <button (click)="sendQuery()">Submit</button>
+</div>
+
+<div *ngIf="searchResult && searchResult.total_count > 0" class="GitSearch">
+  <h3 class="total">Total results: {{searchResult.total_count}}</h3>
+  <ul class="list">
+    <li class="list_item" *ngFor="let item of searchResult.items; index as i"
+        [class.even]="(i % 2 === 0)" [class.odd]="(i % 2 === 1)">
+      <a [href]="item.archive_url">
+        <img class="avatar" [src]="item.owner.avatar_url" alt="avatar"/>
+        <h4 class="title">{{item.name}}
+          <small> by {{item.owner.login | uppercase}}</small>
+        </h4>
+      </a>
+      <p class="description">{{item.description}}</p>
+      <p>Created at: {{item.created_at | date: 'fullDate'}}</p>
+    </li>
+  </ul>
+
+  <div>
+    <a [routerLink]="getPreviousPageLink()" routerLinkActive="active">
+      <button>Previous</button>
+    </a>
+    <a [routerLink]="getNextPageLink()" routerLinkActive="active">
+      <button>Next</button>
+    </a>
+  </div>
+
+</div>
+
+<div *ngIf="searchResult && searchResult.total_count === 0">No results</div>
+<div *ngIf="isLoading">Loading...</div>
